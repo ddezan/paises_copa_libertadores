@@ -66,19 +66,16 @@ df_exploded = df_grouped.explode('Títulos')
 # Converter os anos para inteiros
 df_exploded['Títulos'] = df_exploded['Títulos'].astype(int)
 
-print(df_exploded)
-
 # Agrupar por país e ano, e contar o número de títulos
 df_grouped = df_exploded.groupby(['Títulos', 'País']).size().reset_index(name='count')
-
-print(df_grouped)
 
 # Pivotar o dataframe para ter países como colunas
 df_pivot = df_grouped.pivot(index='Títulos', columns='País', values='count').fillna(0)
 
-print(df_pivot)
-
 # Calcular o total cumulativo por país
 df_cumsum = df_pivot.cumsum()
 
+# Imprime o resultado
+print('\n---------------------------------------------------------------------\n')
+print('Tabela Final\n')
 print(df_cumsum)
