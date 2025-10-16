@@ -28,26 +28,26 @@ def extrair_numero(titulo):
     else:
         return 0
 
-# Aplicar a função à coluna 'Títulos'
+# Aplica a função à coluna 'Títulos'
 df_final['Numero_Titulos'] = df_final['Títulos'].apply(extrair_numero)
 
-# Remover as linhas com 0 títulos
+# Remove as linhas com 0 títulos
 df_final = df_final[df_final['Numero_Titulos'] > 0]
 
-# Remover a última linha que traz a observação
+# Remove a última linha que traz a observação
 df_final = df_final[~df_final['País'].str.contains('Em caso de empate')]
 
-# Remover a coluna 'Numero_Titulos' se não for necessária
+# Remove a coluna 'Numero_Titulos' se não for necessária
 df_final = df_final[['País', 'Títulos']]
 
-print('\n-----------------------\n')
-print('Versão tratada da tabela')
+print('\n---------------------------------------------------------------------\n')
+print('Versão tratada da tabela\n')
 print(df_final)
 
-# Remover o número de títulos e extrair os anos
+# Remove o número de títulos e extrair os anos
 df_final['Títulos'] = df_final['Títulos'].str.replace(r'^\d+\s*\((.*)\)$', r'\1', regex=True).copy()
 
-# Agrupar os anos por país
+# Agrupa os anos por país
 df_grouped = df_final.assign(Títulos=df_final['Títulos'].str.replace(r'^\d+\s*\((.*)\)$', r'\1', regex=True)) \
                .groupby('País')['Títulos'].apply(lambda x: ', '.join(x).split(', ')) \
                .reset_index()
@@ -55,7 +55,30 @@ df_grouped = df_final.assign(Títulos=df_final['Títulos'].str.replace(r'^\d+\s*
 # Remove as separações de anos com letra 'e' e garante que seja uma lista numérica
 df_grouped['Títulos'] = df_grouped['Títulos'].apply(lambda x: [item for sublist in [i.split(' e ') for i in x] for item in sublist])
 
-# Imprimir o resultado
-print('\n-----------------------\n')
-print('Tabela Agrupada')
+# Imprime o resultado
+print('\n---------------------------------------------------------------------\n')
+print('Tabela Agrupada\n')
 print(df_grouped)
+
+# Explode a lista de anos em linhas separadas
+df_exploded = df_grouped.explode('Títulos')
+
+# Converter os anos para inteiros
+df_exploded['Títulos'] = df_exploded['Títulos'].astype(int)
+
+print(df_exploded)
+
+# Agrupar por país e ano, e contar o número de títulos
+df_grouped = df_exploded.groupby(['Títulos', 'País']).size().reset_index(name='count')
+
+print(df_grouped)
+
+# Pivotar o dataframe para ter países como colunas
+df_pivot = df_grouped.pivot(index='Títulos', columns='País', values='count').fillna(0)
+
+print(df_pivot)
+
+# Calcular o total cumulativo por país
+df_cumsum = df_pivot.cumsum()
+
+print(df_cumsum)
