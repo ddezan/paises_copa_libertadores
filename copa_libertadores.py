@@ -3,6 +3,7 @@ import requests
 from io import StringIO
 import re
 import ast
+import plotly.express as px
 
 url = 'https://pt.wikipedia.org/wiki/Copa_Libertadores_da_Am%C3%A9rica'
 headers = {
@@ -79,3 +80,8 @@ df_cumsum = df_pivot.cumsum()
 print('\n---------------------------------------------------------------------\n')
 print('Tabela Final\n')
 print(df_cumsum)
+
+# Gerar o gráfico de linhas
+fig = px.line(df_cumsum, x=df_cumsum.index, y=df_cumsum.columns, title='Títulos da Copa Libertadores por País e Ano')
+fig.update_layout(xaxis_title='Ano', yaxis_title='Quantidade de Títulos')
+fig.write_html('grafico_linhas.html')
