@@ -84,12 +84,21 @@ print(df_final)
 df_final['Títulos'] = df_final['Títulos'].str.replace(r'^\d+\s*\((.*)\)$', r'\1', regex=True).copy()
 
 # Agrupa os anos por país
+#
+# .groupby('País'):Essa parte da linha agrupa o DataFrame resultante pelo campo 'País'.
+# ['Títulos']: Essa parte da linha seleciona apenas a coluna 'Títulos' do DataFrame agrupado.
+# .apply(lambda x: ', '.join(x).split(', ')): 
+# A função lambda faz o seguinte:
+# ', '.join(x): Junta todas as strings de anos em uma única string separada por vírgulas e espaços.
+# .split(', '): Divide a string resultante em uma lista de strings, usando a vírgula e o espaço como separadores.
 df_grouped = df_final.groupby('País')['Títulos'].apply(lambda x: ', '.join(x).split(', ')).reset_index()
 
-# Remove as separações de anos com letra 'e' e garante que seja uma lista numérica
+# Remove as separações de anos com letra 'e'
+# [i.split(' e ') for i in x]: Essa parte da função lambda divide cada string de anos em uma lista de strings, usando a palavra "e" como separador.
+# [item for sublist in ... for item in sublist]: Essa parte da função lambda é uma forma de achatar a lista de listas em uma lista simples.
 df_grouped['Títulos'] = df_grouped['Títulos'].apply(lambda x: [item for sublist in [i.split(' e ') for i in x] for item in sublist])
 
-# Imprime o resultado
+# Imprime o resultado da tabela já com os agrupamentos
 print('\n---------------------------------------------------------------------\n')
 print('Tabela Agrupada\n')
 print(df_grouped)
@@ -100,11 +109,8 @@ df_exploded = df_grouped.explode('Títulos')
 # Converter os anos para inteiros
 df_exploded['Títulos'] = df_exploded['Títulos'].astype(int)
 
-# Agrupar por país e ano, e contar o número de títulos
-df_grouped = df_exploded.groupby(['Títulos', 'País']).size().reset_index(name='count')
-
 # Pivotar o dataframe para ter países como colunas
-df_pivot = df_grouped.pivot(index='Títulos', columns='País', values='count').fillna(0)
+df_pivot = df_exploded.pivot_table(index='Títulos', columns='País', aggfunc='size', fill_value=0)
 
 # Calcular o total cumulativo por país
 df_cumsum = df_pivot.cumsum()
