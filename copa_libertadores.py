@@ -1,8 +1,11 @@
+# Desenvolvido por Daniel Dezan Lopes da Silva em 17/10/2025
+
 import pandas as pd         # Manipulação e análise de dados.
 import requests             # Fazer requisições HTTP em Python
 import io                   # Permite ler e escrever dados em diferentes formatos, como texto, bytes, etc.
 import re                   # Trabalhar com expressões regulares em Python
 import plotly.express as px # Criar visualizações de dados / gráficos interativos
+
 
 # Função para extrair o número de títulos
 def extrair_numero(titulo):
@@ -16,7 +19,7 @@ def extrair_numero(titulo):
             int: O número de títulos encontrado na string. Se nenhum número for encontrado, retorna 0.
     """
     
-    match = re.search(r'(\d+)', str(titulo))  # Converter titulo para string e encontra o número
+    match = re.search(r'(\d+)', str(titulo))  # Converte titulo para string e encontra o número
     if match:
         return int(match.group(1))
     else:
@@ -56,9 +59,6 @@ df_final['Numero_Titulos'] = df_final['Títulos'].apply(extrair_numero)
 
 # Remove as linhas com 0 títulos
 df_final = df_final[df_final['Numero_Titulos'] > 0]
-
-# Remove a última linha que traz a observação
-df_final = df_final[~df_final['País'].str.contains('Em caso de empate')]
 
 # Remove a coluna 'Numero_Titulos'
 df_final = df_final[['País', 'Títulos']]
