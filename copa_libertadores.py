@@ -110,17 +110,22 @@ df_exploded = df_grouped.explode('Títulos')
 df_exploded['Títulos'] = df_exploded['Títulos'].astype(int)
 
 # Pivotar o dataframe para ter países como colunas
+# pivot_table: Essa função é usada para criar uma tabela dinâmica que resume os dados do DataFrame df_exploded.
+# index='Títulos': Define a coluna 'Títulos' como o índice da tabela pivô.
+# columns='País': Define a coluna 'País' como as colunas da tabela pivô.
+# aggfunc='size': Define a função de agregação como 'size', que conta o número de ocorrências de cada combinação de 'Títulos' e 'País'.
+# fill_value=0: Preenche os valores vazios com 0.
 df_pivot = df_exploded.pivot_table(index='Títulos', columns='País', aggfunc='size', fill_value=0)
 
 # Calcular o total cumulativo por país
 df_cumsum = df_pivot.cumsum()
 
-# Imprime o resultado
+# Imprime a Tabela Final
 print('\n---------------------------------------------------------------------\n')
 print('Tabela Final\n')
 print(df_cumsum)
 
-# Gerar o gráfico de linhas
+# Gera o gráfico de linhas em formato html para melhor visualização
 fig = px.line(df_cumsum, x=df_cumsum.index, y=df_cumsum.columns, title='Títulos da Copa Libertadores por País e Ano')
 fig.update_layout(xaxis_title='Ano', yaxis_title='Quantidade de Títulos')
 fig.write_html('grafico_linhas.html')
