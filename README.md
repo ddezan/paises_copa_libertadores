@@ -1,4 +1,6 @@
-# Análise de Títulos da Copa LibertadoresEste projeto visa coletar e analisar dados sobre os títulos da Copa Libertadores da América. O código utiliza técnicas de web scraping para coletar informações da Wikipedia e, em seguida, processa e visualiza os dados.
+# Análise de Títulos da Copa Libertadores
+
+Este projeto visa coletar e analisar dados sobre os títulos da Copa Libertadores da América. O código utiliza técnicas de web scraping para coletar informações da Wikipedia e, em seguida, processa e visualiza os dados.
 
 ## Funcionalidades
 - Coleta de dados: O código coleta informações sobre os títulos da Copa Libertadores da Wikipedia.
