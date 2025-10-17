@@ -63,17 +63,28 @@ df_final = df_final[df_final['Numero_Titulos'] > 0]
 # Remove a coluna 'Numero_Titulos'
 df_final = df_final[['País', 'Títulos']]
 
+# Imprime versão da tabela com alguns tratamentos
 print('\n---------------------------------------------------------------------\n')
 print('Versão tratada da tabela\n')
 print(df_final)
 
-# Remove o número de títulos e extrair os anos
+# Remove o número de títulos e extrai os anos
+#
+# r'^\d+\s*\((.*)\)$': Essa é a expressão regular usada para encontrar o padrão nas strings. Vamos quebrá-la:
+#    - ^: Indica o início da string.
+#    - \d+: Encontra um ou mais dígitos (0-9).
+#    - \s*: Encontra zero ou mais espaços em branco.
+#    - \( e \): Encontram os parênteses literais.
+#    - (.*): É um grupo de captura que encontra qualquer caractere (exceto newline) entre os parênteses.
+#    - $: Indica o final da string.
+#
+# r'\1': Essa é a string de substituição. O \1 refere-se ao grupo de captura na expressão regular, que são os anos entre os parênteses.
+#
+# regex=True: Especifica que a string de busca é uma expressão regular.
 df_final['Títulos'] = df_final['Títulos'].str.replace(r'^\d+\s*\((.*)\)$', r'\1', regex=True).copy()
 
 # Agrupa os anos por país
-df_grouped = df_final.assign(Títulos=df_final['Títulos'].str.replace(r'^\d+\s*\((.*)\)$', r'\1', regex=True)) \
-               .groupby('País')['Títulos'].apply(lambda x: ', '.join(x).split(', ')) \
-               .reset_index()
+df_grouped = df_final.groupby('País')['Títulos'].apply(lambda x: ', '.join(x).split(', ')).reset_index()
 
 # Remove as separações de anos com letra 'e' e garante que seja uma lista numérica
 df_grouped['Títulos'] = df_grouped['Títulos'].apply(lambda x: [item for sublist in [i.split(' e ') for i in x] for item in sublist])
