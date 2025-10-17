@@ -1,4 +1,5 @@
 # Desenvolvido por Daniel Dezan Lopes da Silva em 17/10/2025
+# Com auxílio de IA
 
 import pandas as pd         # Manipulação e análise de dados.
 import requests             # Fazer requisições HTTP em Python
@@ -128,4 +129,17 @@ print(df_cumsum)
 # Gera o gráfico de linhas em formato html para melhor visualização
 fig = px.line(df_cumsum, x=df_cumsum.index, y=df_cumsum.columns, title='Títulos da Copa Libertadores por País e Ano')
 fig.update_layout(xaxis_title='Ano', yaxis_title='Quantidade de Títulos')
+fig.update_layout(
+    annotations=[
+        dict(
+            text="Desenvolvido por Daniel Dezan Lopes da Silva",
+            x=0.01,
+            y=-0.1,
+            xref="paper",
+            yref="paper",
+            font=dict(size=10, color="gray"),
+            showarrow=False,
+        )
+    ]
+)
 fig.write_html('grafico_linhas.html')
