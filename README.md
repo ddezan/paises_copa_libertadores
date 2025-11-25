@@ -7,6 +7,9 @@ Este projeto visa coletar e analisar dados sobre os títulos da Copa Libertadore
 - Processamento de dados: O código processa os dados coletados e os transforma em um formato adequado para análise.
 - Visualização de dados: O código gera um gráfico de linhas que mostra a quantidade de títulos por país e ano.
 
+## Gráfico gerado
+![Gráfico](grafico.png)
+
 ## Como usar
 1. Instale as dependências: Certifique-se de ter as bibliotecas pandas, requests e plotly instaladas.
 2. Execute o código: Execute o código Python para coletar e processar os dados.
